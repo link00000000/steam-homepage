@@ -1,0 +1,278 @@
+<!--
+//TODO: [x]Require certain text inputs in new bookmark modal
+//TODO: Add image support
+//TODO: Remove bookmarks with button on cards
+//TODO: [x]Remove button to edit bookmarks in dropdown
+//TODO: Clear new bookmark modal on discard
+//TODO: Add footer
+//TODO: Allow editing of bookmarks
+//FIXME: Align dropdown in horizontal top nav
+//FIXME: [x]Side bar closes on page load
+-->
+
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Propeller Admin Dashboard">
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+
+<title>Home</title>
+<link rel="shortcut icon" type="image/x-icon" href="themes/images/favicon.ico">
+
+<!-- Google icon -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Bootstrap css -->
+<!-- build:[href] assets/css/ -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!-- /build -->
+
+<!-- Propeller css -->
+<!-- build:[href] assets/css/ -->
+<!-- build:[href] assets/css/ -->
+<link rel="stylesheet" type="text/css" href="css/propeller.min.css">
+<!-- /build -->
+<!-- /build -->
+
+<!-- Propeller theme css-->
+<link rel="stylesheet" type="text/css" href="css/propeller-theme.css" />
+
+<!-- Propeller admin theme css-->
+<link rel="stylesheet" type="text/css" href="css/propeller-admin.css">
+
+
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top pmd-navbar pmd-z-depth">
+        <div class="container-fluid">
+            <div class="pmd-navbar-right-icon pull-right navigation">
+                
+            </div>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect pull-left margin-r8 pmd-sidebar-toggle"><i class="material-icons">menu</i></a>
+            </div>
+            <!-- User information -->
+            <div class="dropdown pmd-dropdown pmd-user-info pull-right">
+                <a href="javascript:void(0);" class="btn-user dropdown-toggle media" data-toggle="dropdown" aria-expanded="false">
+                    <div class="media-right media-middle">
+                        <i class="material-icons">more_vert</i>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="javascript:void(0);" data-target="#new-modal" data-toggle="modal" class="pmd-ripple-effect">New Bookmark</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar Starts -->
+    <div class="pmd-sidebar-overlay"></div>
+
+    <!-- Left sidebar -->
+    <aside class="pmd-sidebar sidebar-default pmd-sidebar-slide-push pmd-sidebar-left bg-fill-darkblue sidebar-with-icons pmd-sidebar-open" role="navigation">
+        <ul class="nav pmd-sidebar-nav" id="nav"></ul>
+    </aside><!-- End Left sidebar -->
+    <!-- Sidebar Ends -->  
+    
+    <!--content area start-->
+    <div id="content" class="pmd-content content-area dashboard">
+
+        <div class="container-fluid">
+            <div class="row" id="card-masonry"></div>
+        </div>
+
+    </div><!--end content area-->
+    
+    <!-- new modal start-->
+    <div tabindex="-1" class="modal fade" id="new-modal" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pmd-modal-bordered">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h2 class="pmd-card-title-text">New Bookmark</h2>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="newBookmark">
+                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                            <label for="first-name">Name</label>
+                            <input type="text" class="mat-input form-control" id="name" value="">
+                        </div>
+                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                            <label for="first-name">URL</label>
+                            <input type="text" class="mat-input form-control" id="link" value="">
+                        </div>
+                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                            <label for="first-name">Image URL</label>
+                            <input type="text" class="mat-input form-control" id="image" value="">
+                            <span class="help-text" style="font-size: 12px">Optional</span> 
+                        </div>
+                    </form>
+                </div>
+                <div class="pmd-modal-action">
+                    <button class="btn pmd-ripple-effect btn-primary" type="button" onclick="newBookmark()" id="newBookmarkSubmit">Save changes</button>
+                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button" id="hiddenClose" style="display: none">Hidden</button>
+                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button" onclick="clearNewBookmarkModal(); clearLabels();">Discard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- new modal ends-->
+    
+    <!-- Scripts Starts -->
+    <!-- build:[src] assets/js/ -->
+    <script src="js/jquery-1.12.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <!-- /build -->
+    <script>
+        $(document).ready(function() {
+            var sPath=window.location.pathname;
+            var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+            $(".pmd-sidebar-nav").each(function(){
+                $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+                $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+                $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+                $(this).find("a[href='"+sPage+"']").addClass("active");
+            });
+        });
+    </script>
+    <script type="text/javascript">
+    (function() {
+      "use strict";
+      var toggles = document.querySelectorAll(".c-hamburger");
+      for (var i = toggles.length - 1; i >= 0; i--) {
+        var toggle = toggles[i];
+        toggleHandler(toggle);
+      };
+      function toggleHandler(toggle) {
+        toggle.addEventListener( "click", function(e) {
+          e.preventDefault();
+          (this.classList.contains("is-active") === true) ? this.classList.remove("is-active") : this.classList.add("is-active");
+        });
+      }
+
+    })();
+    </script>
+
+    <!-- build:[src] assets/js/ -->
+    <script src="js/propeller.min.js"></script> 
+    <!-- /build -->
+    
+    <script>
+        $(function() {
+            updateView();
+        });
+        
+        var clipboard = new Clipboard('.copy-button');
+        
+        function updateView() {
+            $('#nav').empty();
+            $('#card-masonry').empty();
+            var bookmarks = getBookmarks();
+            console.log(bookmarks);
+            for(var i in bookmarks) {
+                $('#nav').append('<li><a class="pmd-ripple-effect" href="' + bookmarks[i].link + '"><i class="media-left media-middle material-icons">bookmark</i><span class="media-body">' + bookmarks[i].name + '</span></a></li>');
+                $('#card-masonry').append('<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><div class="pmd-card pmd-card-default pmd-z-depth"><div class="pmd-card-media"><img width="1184" height="666" class="img-responsive" src="' + bookmarks[i].image + '"></div><div class="pmd-card-title"><h2 class="pmd-card-title-text">' + bookmarks[i].name + '</h2><span class="pmd-card-subtitle-text">' + bookmarks[i].link + '</span></div><div class="pmd-card-actions"><a href="' + bookmarks[i].link + '"><button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Open</button></a><button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default copy-button" data-clipboard-text="' + bookmarks[i].link + '">Copy</button></div></div></div>');
+            }
+        }
+        
+        $('#newBookmark input').on('keydown', function(e) {
+            if(e.which == 13) {
+                $('#newBookmarkSubmit').click();
+            }
+        });
+        
+        function newBookmark() {
+            if($('#newBookmark #name').val() && $('#newBookmark #link').val() && checkURL($('#newBookmark #link').val()) && checkURL($('#newBookmark #image').val() || 'www.example.com')) {
+               var bookmarks = getBookmarks();
+                bookmarks.push({
+                    "name": $('#newBookmark #name').val(),
+                    "link": $('#newBookmark #link').val(),
+                    "image": $('#newBookmark #image').val() || 'http://propeller.in/assets/images/profile-pic.png'
+                });
+                localStorage.bookmarks = JSON.stringify(bookmarks);
+                updateView();
+                $('#hiddenClose').click();
+                clearNewBookmarkModal();
+                clearLabels();
+            } else {
+                if(!$('#newBookmark #name').val()) {
+                    $('#newBookmark #name').parent().addClass('has-error');
+                    if($('#newBookmark #name').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #name').parent().children('.help-text').text('Input Required');
+                    } else {
+                        $('#newBookmark #name').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Input Required</span>');
+                    }
+                } else {
+                    $('#newBookmark #name').parent().removeClass('has-error');
+                    $('#newBookmark #name').siblings('.help-text').remove();
+                }
+                if(!$('#newBookmark #link').val()) {
+                    $('#newBookmark #link').parent().addClass('has-error');
+                    if($('#newBookmark #link').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #link').parent().children('.help-text').text('Input Required');
+                    } else {
+                        $('#newBookmark #link').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Input Required</span>');
+                    }
+                } else {
+                    $('#newBookmark #link').parent().removeClass('has-error');
+                    $('#newBookmark #link').siblings('.help-text').remove();
+                }
+                if(!checkURL($('#newBookmark #link').val() || 'www.example.com')) {
+                    $('#newBookmark #link').parent().addClass('has-error');
+                    if($('#newBookmark #link').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #link').parent().children('.help-text').text('Invalid URL');
+                    } else {
+                        $('#newBookmark #link').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Invalid URL</span>');
+                    }
+                }
+                if(!checkURL($('#newBookmark #image').val() || 'www.example.com')) {
+                    $('#newBookmark #image').parent().addClass('has-error');
+                    if($('#newBookmark #image').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #image').parent().children('.help-text').text('Invalid URL').css('color', '#a94442');
+                    } else {
+                        $('#newBookmark #image').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Invalid URL</span>');
+                    }
+                } else {
+                    $('#newBookmark #image').parent().removeClass('has-error');
+                    $('#newBookmark #image').siblings('.help-text').text('Optional').css('color', 'rgba(0,0,0,.84)');
+                }
+            }
+        }
+        
+        function checkURL(string) {
+            if(string.match(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        function clearLabels() {
+            $('#newBookmark #name').parent().removeClass('has-error').children('.help-text').remove();
+            $('#newBookmark #link').parent().removeClass('has-error').children('.help-text').remove();
+            $('#newBookmark #image').parent().removeClass('has-error').children('.help-text').text('Optional').css('color', 'rgba(0,0,0,.84)');
+        }
+        
+        function clearNewBookmarkModal() {
+            $('#newBookmark').trigger('reset');
+            document.getElementById('newBookmark').reset();
+        }
+        
+        function getBookmarks() {
+            var bookmarks;
+            try {
+                bookmarks = JSON.parse(localStorage.bookmarks);
+            } catch (e) {
+                bookmarks = [];
+            }
+            return bookmarks;
+        }
+    </script>
+    
+    <button onclick="delete localStorage.bookmarks; location.reload();" style="position: absolute; right: 10px; bottom: 10px;">Clear LocalStorage</button>
+</body>
+</html>

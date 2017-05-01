@@ -1,0 +1,41 @@
+[{
+    "name": "Google",
+    "link": "www.google.com",
+    "image": "https://spinnakernordic.com/wp-content/uploads/2016/07/google-ad-sizes-960x250-1.jpg"
+}, {
+    "name": "Discord",
+    "link": "www.discordapp.com",
+    "image": "http://streamersquare.com/wp-content/uploads/2016/03/Discord-Feature-Graphic.png"
+}, {
+    "name": "Steam",
+    "link": "http://store.steampowered.com/",
+    "image": "http://screenrant.com/wp-content/uploads/steam-banner.jpg"
+}, {
+    "name": "EA",
+    "link": "www.origin.com",
+    "image": "https://etgeekera.files.wordpress.com/2013/07/ea-origin-banner.jpg"
+}, {
+    "name": "Ubisoft",
+    "link": "http://uplay.ubi.com/",
+    "image": "https://www.rockpapershotgun.com/images/12/jul/uplaylogo.jpg"
+}, {
+    "name": "Yahoo!",
+    "link": "www.yahoo.com",
+    "image": "http://digitalreview.co/wp-content/uploads/2017/02/YAHOO-Encrypts-Everything-and-Encrypted-Yahoo-Messenger.jpg"
+}, {
+    "name": "Reddit",
+    "link": "www.reddit.com",
+    "image": "http://i.imgur.com/nqyB2SI.jpg"
+}, {
+    "name": "Twitter",
+    "link": "www.twitter.com",
+    "image": "http://www.smartt.com/sites/default/files/public/twitter_logo_banner_12.jpg"
+}, {
+    "name": "YouTube",
+    "link": "www.youtube.com",
+    "image": "https://www.seoclerk.com/pics/443105-1Cdpmj1460287445.png"
+}, {
+    "name": "Twitch",
+    "link": "www.twitch.tv",
+    "image": "https://ritacabral.files.wordpress.com/2015/03/twitch.jpg?w=705&h=435&crop=1"
+}]

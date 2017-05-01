@@ -1,0 +1,533 @@
+<!--
+//TODO: [x]Require certain text inputs in new bookmark modal
+//TODO: [x]Add image support
+//TODO: [x]Remove bookmarks with button on cards
+//TODO: [x]Remove button to edit bookmarks in dropdown
+//TODO: [x]Clear new bookmark modal on discard
+//TODO: [x]Add footer
+//TODO: [x]Allow editing of bookmarks
+//TODO: [x]Set focus on modal open
+//TODO: [x]Fix number of cards in row to 3
+//TODO: [x]Copied link alert
+//TODO: [x]Allow reordering of bookmarks using side view
+//TODO: [x]Allow reordering of bookmarks using masonry view
+//FIXME: [x]Align dropdown in horizontal top nav
+//FIXME: [x]Side bar closes on page load
+//FIXME: [x]www.example.com does not redirect properly
+-->
+
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Propeller Admin Dashboard">
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+
+<title>Home</title>
+<link rel="shortcut icon" type="image/x-icon" href="themes/images/favicon.ico">
+
+<!-- Google icon -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Bootstrap css -->
+<!-- build:[href] assets/css/ -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap-cards.css">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!-- /build -->
+
+<!-- Propeller css -->
+<!-- build:[href] assets/css/ -->
+<!-- build:[href] assets/css/ -->
+<link rel="stylesheet" type="text/css" href="css/propeller.min.css">
+<!-- /build -->
+<!-- /build -->
+
+<!-- Propeller theme css-->
+<link rel="stylesheet" type="text/css" href="css/propeller-theme.css" />
+
+<!-- Propeller admin theme css-->
+<link rel="stylesheet" type="text/css" href="css/propeller-admin.css">
+
+
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top pmd-navbar pmd-z-depth" style="max-height: 64px">
+        <div class="container-fluid">
+            <div class="pmd-navbar-right-icon pull-right navigation">
+                
+            </div>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect pull-left margin-r8 pmd-sidebar-toggle"><i class="material-icons">menu</i></a>
+            </div>
+            <!-- User information -->
+            <div class="dropdown pmd-dropdown pmd-user-info pull-right" style="position: absolute; right: 18px; top: 8px;">
+                <a href="javascript:void(0);" class="btn-user dropdown-toggle media" data-toggle="dropdown" aria-expanded="false">
+                    <div class="media-right media-middle">
+                        <i class="material-icons">more_vert</i>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="javascript:void(0);" data-target="#new-modal" data-toggle="modal" class="pmd-ripple-effect" onclick="setTimeout(function() {$('#newBookmark #name').focus();}, 500);">New Bookmark</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar Starts -->
+    <div class="pmd-sidebar-overlay"></div>
+
+    <!-- Left sidebar -->
+    <aside class="pmd-sidebar sidebar-default pmd-sidebar-slide-push pmd-sidebar-left bg-fill-darkblue sidebar-with-icons pmd-sidebar-open" role="navigation">
+        <ul class="nav pmd-sidebar-nav smooth-sortable" id="nav"></ul>
+        <button class="btn pmd-btn-outline pmd-ripple-effect btn-primary" id="moveBtn" style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%)" onclick="toggleMoveBookmarks()">Move Bookmarks</button>
+    </aside><!-- End Left sidebar -->
+    <!-- Sidebar Ends -->  
+    
+    <!--content area start-->
+    <div id="content" class="pmd-content content-area dashboard">
+
+        <div class="container-fluid">
+            <div class="card-columns" id="card-masonry"></div>
+        </div>
+
+    </div><!--end content area-->
+    
+    <!-- new modal start-->
+    <div tabindex="-1" class="modal fade" id="new-modal" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pmd-modal-bordered">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h2 class="pmd-card-title-text">New Bookmark</h2>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="newBookmark">
+                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                            <label for="first-name">Name</label>
+                            <input type="text" class="mat-input form-control" id="name" value="" autocomplete="off" autocorrect="off" autocapitalize="off" 
+spellcheck="false">
+                        </div>
+                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                            <label for="first-name">URL</label>
+                            <input type="text" class="mat-input form-control" id="link" value="" autocomplete="off" autocorrect="off" autocapitalize="off" 
+spellcheck="false">
+                        </div>
+                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                            <label for="first-name">Image URL</label>
+                            <input type="text" class="mat-input form-control" id="image" value="" autocomplete="off" autocorrect="off" autocapitalize="off" 
+spellcheck="false">
+                            <span class="help-text" style="font-size: 12px">Optional</span> 
+                        </div>
+                    </form>
+                </div>
+                <div class="pmd-modal-action">
+                    <button class="btn pmd-ripple-effect btn-primary" type="button" onclick="newBookmark()" id="newBookmarkSubmit">Add Bookmark</button>
+                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default hiddenClose" type="button" style="display: none">Hidden</button>
+                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button" onclick="clearNewBookmarkModal(); clearLabels();">Discard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- new modal ends-->
+    
+    <!-- edit dialog starts-->
+    <div tabindex="-1" class="modal fade" id="edit-modal" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="pmd-modal-media"> <img width="1184" height="666" class="img-responsive" src="http://propeller.in/assets/images/profile-pic.png"> </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="editBookmark">
+                        <div class="form-group pmd-textfield">
+                            <label for="first-name">Name</label>
+                            <input type="text" class="mat-input form-control" id="name" value="" autocomplete="off" autocorrect="off" autocapitalize="off" 
+spellcheck="false">
+                        </div>
+                        <div class="form-group pmd-textfield">
+                            <label for="first-name">URL</label>
+                            <input type="text" class="mat-input form-control" id="link" value="" autocomplete="off" autocorrect="off" autocapitalize="off" 
+spellcheck="false">
+                        </div>
+                        <div class="form-group pmd-textfield">
+                            <label for="first-name">Image URL</label>
+                            <input type="text" class="mat-input form-control" id="image" value="" autocomplete="off" autocorrect="off" autocapitalize="off" 
+spellcheck="false">
+                            <span class="help-text" style="font-size: 12px">Optional</span> 
+                        </div>
+                    </form>
+                </div>
+                <div class="pmd-modal-action">
+                    <button class="btn pmd-ripple-effect btn-primary" type="button" onclick="editBookmark()" id="editBookmarkSubmit">Save changes</button>
+                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default hiddenClose" type="button" style="display: none">Hidden</button>
+                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button" onclick="clearNewBookmarkModal(); clearLabels();">Discard</button>
+                    <button data-target="#confirm-modal" data-toggle="modal" class="btn pmd-ripple-effect pmd-btn-flat btn-danger" type="button" onclick="fadeModal()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- edit modal ends -->
+    
+    <!-- confirm modal start -->
+    <div tabindex="-1" class="modal fade" id="confirm-modal" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="pmd-card-title-text">Delete this bookmark?</h2>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure that you want to delete this bookmark. Deleting this bookmark is permanent and cannot be undone.</p>
+                </div>
+                <div class="pmd-modal-action pmd-modal-bordered text-right">
+                    <button data-dismiss="modal" class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button" onclick="fadeModal()">Cancel</button>
+                    <button data-dismiss="modal" type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default" onclick="fadeModal(); deleteBookmark();">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- confirm modal ends -->
+   
+   <!-- footer starts -->
+   <footer class="admin-footer">
+    <div class="container-fluid">
+        <ul class="list-unstyled list-inline">
+            <li>
+                <span class="pmd-card-subtitle-text">Logan Crandall © <span class="auto-update-year">2017</span>. All Rights Reserved.</span>
+                <h3 class="pmd-card-subtitle-text">Licensed under <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license.</a></h3>
+            </li>
+            <li class="pull-right for-support" onclick="delete localStorage.bookmarks; location.reload();" id="clearCookies">
+                <div style="float: left">
+                    <i class="material-icons md-dark pmd-md">storage</i>
+                </div>
+                <div style="float: right">
+                  <span class="pmd-card-subtitle-text">Bookmarks Page</span>
+                  <h3 class="pmd-card-title-text">Clear Your Cookies</h3>
+                </div>
+            </li>
+        </ul>
+    </div>
+   </footer>
+   <!-- footer ends -->
+   
+   <div class="pmd-alert-container right top" style="width: 360px;"></div>
+    
+    <!-- Scripts Starts -->
+    <!-- build:[src] assets/js/ -->
+    <script src="js/jquery-1.12.2.min.js"></script>
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>-->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <!-- /build -->
+    <script>
+        $(document).ready(function() {
+            var sPath=window.location.pathname;
+            var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+            $(".pmd-sidebar-nav").each(function(){
+                $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+                $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+                $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+                $(this).find("a[href='"+sPage+"']").addClass("active");
+            });
+        });
+    </script>
+    <script type="text/javascript">
+    (function() {
+      "use strict";
+      var toggles = document.querySelectorAll(".c-hamburger");
+      for (var i = toggles.length - 1; i >= 0; i--) {
+        var toggle = toggles[i];
+        toggleHandler(toggle);
+      };
+      function toggleHandler(toggle) {
+        toggle.addEventListener( "click", function(e) {
+          e.preventDefault();
+          (this.classList.contains("is-active") === true) ? this.classList.remove("is-active") : this.classList.add("is-active");
+        });
+      }
+    })();
+    </script>
+
+    <!-- build:[src] assets/js/ -->
+    <script src="js/propeller.min.js"></script> 
+    <!-- /build -->
+    
+    <script>
+        $(function() {
+            updateView();
+            
+            var startIndex, changeIndex, uiHeight;
+            $('.nav.pmd-sidebar-nav').sortable({
+                axis: 'y',
+                handle: '.dragHandle',
+                revert: true,
+                stop: function() {
+                    var order = $('.nav.pmd-sidebar-nav').sortable('toArray', {attribute: 'data-index'});
+                    var bookmarks = getBookmarks();
+                    var newBookmarks = [];
+                    for(var i in order) {
+                        newBookmarks.push(bookmarks[order[i]]);
+                    }
+                    localStorage.bookmarks = JSON.stringify(newBookmarks);
+                }
+            });
+        });
+        
+        var clipboard = new Clipboard('.copy-button');
+        
+        function updateView() {
+            $('#nav').empty();
+            $('#card-masonry').empty();
+            var bookmarks = getBookmarks();
+            console.log(bookmarks);
+            for(var i in bookmarks) {
+                $('#nav').append('<li style="user-select: none; background-color: #1f2f46;" data-index="' + i + '"><a class="pmd-ripple-effect" href="' + bookmarks[i].link + '"><i class="media-left media-middle material-icons">bookmark</i><span class="media-body">' + bookmarks[i].name + '</span></a><i class="material-icons pmd-md md-dark dragHandle" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); user-select: none; cursor: move;">drag_handle</i></li>');
+                $('#card-masonry').append('<div class="card pmd-card pmd-card-default pmd-z-depth"><div class="pmd-card-media"><img width="1184" height="666" class="img-responsive" src="' + bookmarks[i].image + '"></div><div class="pmd-card-title"><h2 class="pmd-card-title-text">' + bookmarks[i].name + '</h2><span class="pmd-card-subtitle-text">' + bookmarks[i].link + '</span></div><div class="pmd-card-actions"><a href="' + bookmarks[i].link + '"><button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Open</button></a><button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default copy-button" data-clipboard-text="' + bookmarks[i].link + '" onclick="copiedAlert()">Copy</button><button data-target="#edit-modal" data-toggle="modal" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-default" type="button" onclick="setElementsEditModal(this); setTimeout(function() {$(\'#newBookmark #name\').focus();}, 500);"><i class="material-icons pmd-small">edit</i></button></div></div></div>');
+            }
+        }
+        
+        $('#newBookmark input').on('keydown', function(e) {
+            if(e.which == 13) {
+                $('#newBookmarkSubmit').click();
+            }
+            if(e.which == 27) {
+                clearLabels();
+                clearNewBookmarkModal();
+            }
+        });
+        
+        function newBookmark() {
+            if($('#newBookmark #name').val() && $('#newBookmark #link').val() && checkURL($('#newBookmark #link').val()) && checkURL($('#newBookmark #image').val() || 'www.example.com')) {
+               var bookmarks = getBookmarks();
+                bookmarks.push({
+                    "name": $('#newBookmark #name').val(),
+                    "link": expandURL($('#newBookmark #link').val()),
+                    "image": $('#newBookmark #image').val() || 'http://propeller.in/assets/images/profile-pic.png'
+                });
+                localStorage.bookmarks = JSON.stringify(bookmarks);
+                updateView();
+                $('#newBookmark .hiddenClose').click();
+                clearNewBookmarkModal();
+                clearLabels();
+            } else {
+                if(!$('#newBookmark #name').val()) {
+                    $('#newBookmark #name').parent().addClass('has-error');
+                    if($('#newBookmark #name').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #name').parent().children('.help-text').text('Input Required');
+                    } else {
+                        $('#newBookmark #name').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Input Required</span>');
+                    }
+                } else {
+                    $('#newBookmark #name').parent().removeClass('has-error');
+                    $('#newBookmark #name').siblings('.help-text').remove();
+                }
+                if(!$('#newBookmark #link').val()) {
+                    $('#newBookmark #link').parent().addClass('has-error');
+                    if($('#newBookmark #link').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #link').parent().children('.help-text').text('Input Required');
+                    } else {
+                        $('#newBookmark #link').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Input Required</span>');
+                    }
+                } else {
+                    $('#newBookmark #link').parent().removeClass('has-error');
+                    $('#newBookmark #link').siblings('.help-text').remove();
+                }
+                if(!checkURL($('#newBookmark #link').val() || 'www.example.com')) {
+                    $('#newBookmark #link').parent().addClass('has-error');
+                    if($('#newBookmark #link').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #link').parent().children('.help-text').text('Invalid URL');
+                    } else {
+                        $('#newBookmark #link').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Invalid URL</span>');
+                    }
+                }
+                if(!checkURL($('#newBookmark #image').val() || 'www.example.com')) {
+                    $('#newBookmark #image').parent().addClass('has-error');
+                    if($('#newBookmark #image').parent().children('.help-text').length > 0) {
+                        $('#newBookmark #image').parent().children('.help-text').text('Invalid URL').css('color', '#a94442');
+                    } else {
+                        $('#newBookmark #image').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Invalid URL</span>');
+                    }
+                } else {
+                    $('#newBookmark #image').parent().removeClass('has-error');
+                    $('#newBookmark #image').siblings('.help-text').text('Optional').css('color', 'rgba(0,0,0,.84)');
+                }
+            }
+        }
+        
+        function checkURL(string) {
+            if(string.match(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        function expandURL(string) {
+            if(string.substr(0, 3) == 'www') {
+                string = 'http://' + string;
+            }
+            if(string.substr(-1, 1) != '/') {
+                string = string + '/';
+            }
+            return string;
+        }
+        
+        function clearLabels() {
+            $('#newBookmark #name, #edit-modal #name').parent().removeClass('has-error').children('.help-text').remove();
+            $('#newBookmark #link, #edit-modal #link').parent().removeClass('has-error').children('.help-text').remove();
+            $('#newBookmark #image, #edit-modal #image').parent().removeClass('has-error').children('.help-text').text('Optional').css('color', 'rgba(0,0,0,.84)');
+        }
+        
+        function clearNewBookmarkModal() {
+            $('#newBookmark').trigger('reset');
+            document.getElementById('newBookmark').reset();
+        }
+        
+        function getBookmarks() {
+            var bookmarks;
+            try {
+                bookmarks = JSON.parse(localStorage.bookmarks);
+            } catch (e) {
+                bookmarks = [];
+            }
+            return bookmarks;
+        }
+        
+        function setElementsEditModal(elem) {
+            var index = $(elem).parent().parent().index();
+            var item = getBookmarks()[index];
+            $('#edit-modal').data('index', index);
+            $('#edit-modal .pmd-modal-media img').attr('src', item.image);
+            $('#edit-modal #name').val(item.name);
+            $('#edit-modal #link').val(item.link);
+            if(item.image != 'http://propeller.in/assets/images/profile-pic.png') {
+                $('#edit-modal #image').val(item.image);
+            } else {
+                $('#edit-modal #image').val('');
+            }
+        }
+        
+        function editBookmark() {
+            if($('#edit-modal #name').val() && $('#edit-modal #link').val() && checkURL($('#edit-modal #link').val()) && checkURL($('#edit-modal #image').val() || 'www.example.com')) {
+               var index = $('#edit-modal').data('index');
+               var bookmarks = getBookmarks();
+                bookmarks[index].name = $('#edit-modal #name').val();
+                bookmarks[index].link = expandURL($('#edit-modal #link').val());
+                bookmarks[index].image = $('#edit-modal #image').val() || 'http://propeller.in/assets/images/profile-pic.png';
+                localStorage.bookmarks = JSON.stringify(bookmarks);
+                updateView();
+                $('#edit-modal .hiddenClose').click();
+                clearLabels();
+            } else {
+                if(!$('#edit-modal #name').val()) {
+                    $('#edit-modal #name').parent().addClass('has-error');
+                    if($('#edit-modal #name').parent().children('.help-text').length > 0) {
+                        $('#edit-modal #name').parent().children('.help-text').text('Input Required');
+                    } else {
+                        $('#edit-modal #name').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Input Required</span>');
+                    }
+                } else {
+                    $('#edit-modal #name').parent().removeClass('has-error');
+                    $('#edit-modal #name').siblings('.help-text').remove();
+                }
+                if(!$('#edit-modal #link').val()) {
+                    $('#edit-modal #link').parent().addClass('has-error');
+                    if($('#edit-modal #link').parent().children('.help-text').length > 0) {
+                        $('#edit-modal #link').parent().children('.help-text').text('Input Required');
+                    } else {
+                        $('#edit-modal #link').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Input Required</span>');
+                    }
+                } else {
+                    $('#edit-modal #link').parent().removeClass('has-error');
+                    $('#edit-modal #link').siblings('.help-text').remove();
+                }
+                if(!checkURL($('#edit-modal #link').val() || 'www.example.com')) {
+                    $('#edit-modal #link').parent().addClass('has-error');
+                    if($('#edit-modal #link').parent().children('.help-text').length > 0) {
+                        $('#edit-modal #link').parent().children('.help-text').text('Invalid URL');
+                    } else {
+                        $('#edit-modal #link').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Invalid URL</span>');
+                    }
+                }
+                if(!checkURL($('#edit-modal #image').val() || 'www.example.com')) {
+                    $('#edit-modal #image').parent().addClass('has-error');
+                    if($('#edit-modal #image').parent().children('.help-text').length > 0) {
+                        $('#edit-modal #image').parent().children('.help-text').text('Invalid URL').css('color', '#a94442');
+                    } else {
+                        $('#edit-modal #image').parent().addClass('has-error').append('<span class="help-text" style="font-size: 12px; color: #a94442;">Invalid URL</span>');
+                    }
+                } else {
+                    $('#edit-modal #image').parent().removeClass('has-error');
+                    $('#edit-modal #image').siblings('.help-text').text('Optional').css('color', 'rgba(0,0,0,.84)');
+                }
+            }
+        }
+        
+        function fadeModal() {
+            if($('#edit-modal').css('opacity') == '1') {
+                $('#edit-modal').css('opacity', '0');
+            } else {
+                $('#edit-modal').css('opacity', '1');
+            }
+        }
+        
+        function deleteBookmark() {
+            var index = $('#edit-modal').data('index');
+            var bookmarks = getBookmarks();
+            bookmarks.splice(index, 1);
+            localStorage.bookmarks = JSON.stringify(bookmarks);
+            updateView();
+            $('#edit-modal .hiddenClose').click();
+            clearLabels();
+        }
+        
+        function toggleMoveBookmarks() {
+            if($('#moveBtn').text().toLowerCase() == 'move bookmarks') {
+                $('#moveBtn').text('Done');
+                $('.dragHandle').stop().fadeIn('fast');
+            } else {
+                $('#moveBtn').text('Move Bookmarks');
+                $('.dragHandle').stop().fadeOut('fast');
+                updateView();
+            }
+        }
+        
+        function copiedAlert() {
+            $('.pmd-alert-container.right.top').append('<div class="pmd-alert visible fadeInUp">Link copied</div>');
+            setTimeout(function() {$('.pmd-alert-container.right.top div:first-child').fadeOut('fast')}, 3000);
+        }
+        
+    </script>
+    <style>
+        .card.pmd-card.pmd-card-default.pmd-z-depth .pmd-btn-fab {
+            position: absolute;
+            right: 6px;
+            bottom: 6px;
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+        .card.pmd-card.pmd-card-default.pmd-z-depth:hover .pmd-btn-fab {
+            opacity: .54;
+        }
+        #clearCookies {
+            cursor: pointer;
+            transition: opacity 200ms;
+        }
+        #clearCookies:hover {
+            opacity: .54;
+        }
+        #moveBtn {
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+        .pmd-sidebar-open #moveBtn {
+            opacity: 1;
+        }
+        .dragHandle {
+            display: none;
+        }
+    </style>
+</body>
+</html>
